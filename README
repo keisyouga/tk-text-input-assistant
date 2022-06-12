@@ -1,0 +1,45 @@
+================================================================
+tk text input assistant
+================================================================
+
+overview
+  it assist to input text especially for multibye string.
+  it uses clipboard to communicate other program.
+
+requirement
+  tcl/tk
+  twapi (on windows)
+
+usage
+  $ wish ttia.vfs/main.tcl
+
+keyboard bindings
+  Alt+j popup window
+  Alt+J hide window
+  Control+q quit
+  Control+g clear
+  Escape cancel
+  Alt+0 direct mode
+  Alt+1 hiragana mode
+  Alt+2 katakana mode
+  Alt+3 cangjie mode
+  Alt+4 skkdic mode
+
+advantages
+  it can run where tcl/tk is available.
+  support x11 and win32 platforms.
+
+disadvantages
+  it cannot insert the text to applications that do not support clipboard paste.
+  it cannot insert the text directly to ohter applications,
+  you must paste clipboard manually.
+
+files
+  ttia.vfs/main.tcl	main script
+  config.tcl		configuration file
+  map/*.map		mapping files
+  dic/*.dic		dictionary files
+
+todo
+  more keyboard bindings
+  allow to bind activate and hide to same key
