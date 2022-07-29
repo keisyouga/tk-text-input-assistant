@@ -8,10 +8,12 @@ package require Tk
 set scriptDir [file dirname [file normalize [info script]]]
 lappend ::auto_path [file join $scriptDir lib]
 
-# config file directory
+# config file directory assumes parent of main.tcl
 set configDir [file dirname $scriptDir]
 # config file name
 set configFile [file join $::configDir "config.tcl"]
+
+cd $configDir
 
 # load library for hotkey
 if {[tk windowingsystem] eq "x11"} {
