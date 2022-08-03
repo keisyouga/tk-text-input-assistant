@@ -8,11 +8,11 @@ package require Tk
 set scriptDir [file dirname [file normalize [info script]]]
 lappend ::auto_path [file join $scriptDir lib]
 
-# config file directory assumes parent of main.tcl
+# assumes config file in in directory that parent of main.tcl
 set configDir [file dirname $scriptDir]
 # config file name
 set configFile [file join $::configDir "config.tcl"]
-
+# change working directory to configdir
 cd $configDir
 
 # load library for hotkey
@@ -503,7 +503,7 @@ proc keyBackSpace {} {
 }
 
 # workarounds
-# some window managers locks keyboard after withdraw or destroy
+# some window managers locks keyboard after withdraw or destroy window, so hide it
 proc hide {w} {
 	#wm withdraw $w
 	#destroy $w
@@ -650,7 +650,7 @@ array set dic {
 }
 
 # start: start position to display cands
-# length: max item of boxStr
+# maxItem: max item of boxStr
 # boxStr: list of display strings
 # start_cands: text for label $w.dic.start_cands
 array set candsBox {
