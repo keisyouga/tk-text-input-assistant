@@ -112,9 +112,11 @@ proc makeCandsWithDict {str} {
 	return $cands
 }
 
-proc makeCandsBoxStr {cands start len} {
-	#puts "makeCandsBoxStr: [llength $cands] $start $len"
-	global padInfo
+proc makeCandsBoxStr {cands pos len} {
+	#puts "makeCandsBoxStr: [llength $cands] $pos $len"
+	global padInfo candsBox
+
+	set start [expr $pos / $candsBox(maxItem) * $candsBox(maxItem)]
 
 	set ::candsBox(boxStr) ""
 	if {[llength $cands] >= 1} {
@@ -124,7 +126,12 @@ proc makeCandsBoxStr {cands start len} {
 		}
 	}
 
-	set ::candsBox(start_cands) "[expr $start + 1]/[llength $cands]"
+	set ::candsBox(start_cands) "[expr $pos + 1]/[llength $cands]"
+
+	# set precommitStr to selected cand
+	set data [lindex $cands $pos 1]
+	# wait doMap
+	after 20 "set padInfo(precommitStr) $data"
 }
 
 # create candidates from mappedStr with dicFile
@@ -144,13 +151,8 @@ proc doDic {a e args} {
 
 	#set padInfo(cands) [makeCands $padInfo(mappedStr) $padInfo(dicFile)]
 	set padInfo(cands) [makeCandsWithDict $padInfo(mappedStr)]
-	set ::candsBox(start) 0
-	makeCandsBoxStr $padInfo(cands) $::candsBox(start) $::candsBox(maxItem)
-
-	# set precommitStr to first cand
-	set data [lindex $::candsBox(boxStr) 1]
-	# wait doMap
-	after 20 "set padInfo(precommitStr) $data"
+	set ::candsBox(pos) 0
+	makeCandsBoxStr $padInfo(cands) $::candsBox(pos) $::candsBox(maxItem)
 
 	return
 }
@@ -325,17 +327,22 @@ proc mapFileChanged {w a e args} {
 proc moveCandCursor {w sym} {
 	#puts "moveCandCursor: $w $sym"
 
-	#TODO: handle Up, Down key
 	switch -- $sym {
 		Prior {
-			incr ::candsBox(start) -10
+			incr ::candsBox(pos) -$::candsBox(maxItem)
 		}
 		Next {
-			incr ::candsBox(start) 10
+			incr ::candsBox(pos) $::candsBox(maxItem)
+		}
+		Up {
+			incr ::candsBox(pos) -1
+		}
+		Down {
+			incr ::candsBox(pos) 1
 		}
 	}
 
-	makeCandsBoxStr $::padInfo(cands) $::candsBox(start) $::candsBox(maxItem)
+	makeCandsBoxStr $::padInfo(cands) $::candsBox(pos) $::candsBox(maxItem)
 }
 
 proc setClipState {w own sel} {
@@ -649,12 +656,12 @@ array set dic {
 	data {}
 }
 
-# start: start position to display cands
+# pos: selected item position
 # maxItem: max item of boxStr
 # boxStr: list of display strings
 # start_cands: text for label $w.dic.start_cands
 array set candsBox {
-	start 0
+	pos 0
 	maxItem 10
 	boxStr {}
 	start_cands "0/0"
