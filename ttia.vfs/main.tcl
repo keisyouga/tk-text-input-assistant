@@ -324,26 +324,34 @@ proc mapFileChanged {w a e args} {
 	loadMapFile $w $padInfo(mapFile)
 }
 
-proc moveCandCursor {w sym} {
-	#puts "moveCandCursor: $w $sym"
+proc moveCandCursorN {w} {
+	moveCandCursor $w 1
+}
 
-	switch -- $sym {
-		Prior {
-			incr ::candsBox(pos) -$::candsBox(maxItem)
-		}
-		Next {
-			incr ::candsBox(pos) $::candsBox(maxItem)
-		}
-		Up {
-			incr ::candsBox(pos) -1
-		}
-		Down {
-			incr ::candsBox(pos) 1
-		}
+proc moveCandCursorP {w} {
+	moveCandCursor $w -1
+}
+
+proc moveCandCursorF {w} {
+	moveCandCursor $w $::candsBox(maxItem)
+}
+
+proc moveCandCursorB {w} {
+	moveCandCursor $w -$::candsBox(maxItem)
+}
+
+proc moveCandCursor {w num} {
+	# puts "moveCandCursor: $w $num"
+
+	set len [llength $::padInfo(cands)]
+	if {$len <= 0} {
+		return
 	}
 
+	incr ::candsBox(pos) $num
+
 	# make sure candsBox(pos) is in valid range
-	set ::candsBox(pos) [expr $::candsBox(pos) % [llength $::padInfo(cands)]]
+	set ::candsBox(pos) [expr $::candsBox(pos) % $len]
 
 	makeCandsBoxStr $::padInfo(cands) $::candsBox(pos) $::candsBox(maxItem)
 }
@@ -467,10 +475,15 @@ proc init {} {
 		bind TtiaPadInput <Control-Key-$i> {;}
 		bind TtiaPadInput <Key-$i> "doInputNumkey %W %K"
 	}
-	bind TtiaPadInput <Key-Down> "moveCandCursor %W %K"
-	bind TtiaPadInput <Key-Up> "moveCandCursor %W %K"
-	bind TtiaPadInput <Key-Prior> "moveCandCursor %W %K"
-	bind TtiaPadInput <Key-Next> "moveCandCursor %W %K"
+	# `; break' prevent to insert character to widget
+	bind TtiaPadInput <Key-Down> "moveCandCursorN %W ; break"
+	bind TtiaPadInput <Control-n> "moveCandCursorN %W ; break"
+	bind TtiaPadInput <Key-Up> "moveCandCursorP %W ; break"
+	bind TtiaPadInput <Control-p> "moveCandCursorP %W ; break"
+	bind TtiaPadInput <Key-Prior> "moveCandCursorB %W ; break"
+	bind TtiaPadInput <Control-b> "moveCandCursorB %W ; break"
+	bind TtiaPadInput <Key-Next> "moveCandCursorF %W ; break"
+	bind TtiaPadInput <Control-f> "moveCandCursorF %W ; break"
 	bind TtiaPadInput <FocusIn> {%W configure -bg yellow}
 	bind TtiaPadInput <FocusOut> {%W configure -bg white}
 
