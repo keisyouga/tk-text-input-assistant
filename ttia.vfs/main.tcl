@@ -342,6 +342,9 @@ proc moveCandCursor {w sym} {
 		}
 	}
 
+	# make sure candsBox(pos) is in valid range
+	set ::candsBox(pos) [expr $::candsBox(pos) % [llength $::padInfo(cands)]]
+
 	makeCandsBoxStr $::padInfo(cands) $::candsBox(pos) $::candsBox(maxItem)
 }
 
