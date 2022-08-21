@@ -100,8 +100,8 @@ proc getWinNum {} {
 }
 
 # return list of matched strings
-proc makeCandsWithDict {str} {
-	#puts "makeCandsWithDict"
+proc makeCandsWithDic {str} {
+	#puts "makeCandsWithDic"
 	global padInfo
 
 	set matched [lsearch -all -glob $::dic(key) $str]
@@ -150,7 +150,7 @@ proc doDic {a e args} {
 	}
 
 	#set padInfo(cands) [makeCands $padInfo(mappedStr) $padInfo(dicFile)]
-	set padInfo(cands) [makeCandsWithDict $padInfo(mappedStr)]
+	set padInfo(cands) [makeCandsWithDic $padInfo(mappedStr)]
 	set ::candsBox(pos) 0
 	makeCandsBoxStr $padInfo(cands) $::candsBox(pos) $::candsBox(maxItem)
 
