@@ -595,7 +595,7 @@ proc makePad {} {
 
 	# map => dic
 	labelframe $w.dic -text dic
-	ttk::combobox $w.dic.cb -textvariable padInfo(dicFile) -value $::dicFileList -takefocus 0
+	ttk::combobox $w.dic.cb -textvariable padInfo(dicFile) -value $::dicFileList -exportselection 0 -takefocus 0
 	label $w.dic.l -textvariable ::candsBox(boxStr)
 	label $w.dic.ruler -text "1:\n2:\n3:\n4:\n5:\n6:\n7:\n8:\n9:\n0:\n"
 	label $w.dic.start_cands -textvariable ::candsBox(start_cands)
