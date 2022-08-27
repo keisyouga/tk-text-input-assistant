@@ -237,7 +237,14 @@ proc toText {str} {
 proc doInputNumkey {w n} {
 	#puts "doInputNumkey: $w $n"
 
-	if {$::candsBox(boxStr) eq ""} {
+	global candsBox
+
+	# disable doInputNumkey
+	if {$::padInfo(keyContainNumber)} {
+		return
+	}
+
+	if {$candsBox(boxStr) eq ""} {
 		return
 	}
 
@@ -246,7 +253,7 @@ proc doInputNumkey {w n} {
 
 	# get data$n of boxStr {key1 data1 key2 data2 ...}
 	set pos [expr $n * 2 + 1]
-	set data [lindex $::candsBox(boxStr) $pos]
+	set data [lindex $candsBox(boxStr) $pos]
 	toText $data
 }
 
@@ -398,10 +405,22 @@ proc loadDicFile {file} {
 	set ::dic(key) {}
 	set ::dic(data) {}
 
+	# set keyContainNumber to 0
+	set padInfo(keyContainNumber) 0
+
+	# start appending to dic
 	while {[gets $chan line] >= 0} {
 		set fields [split $line]
-		lappend ::dic(key) [lindex $fields 0]
-		lappend ::dic(data) [join [lrange $fields 1 end]]
+		# key
+		set k [lindex $fields 0]
+		lappend ::dic(key) $k
+		# disable select candidate by number key if key contains number
+		if {[string match {*[0-9]*} $k]} {
+			set padInfo(keyContainNumber) 1
+		}
+		# data
+		set d [join [lrange $fields 1 end]]
+		lappend ::dic(data) $d
 	}
 
 	close $chan
@@ -471,8 +490,10 @@ proc init {} {
 	bind TtiaPadInput <Key-BackSpace> "keyBackSpace"
 	# select candidate by number key
 	for {set i 0} {$i <= 9} {incr i} {
+		# disable number key bindings with modifier alt, ctrl
 		bind TtiaPadInput <Alt-Key-$i> {;}
 		bind TtiaPadInput <Control-Key-$i> {;}
+		# bind number key
 		bind TtiaPadInput <Key-$i> "doInputNumkey %W %K"
 	}
 	# `; break' prevent to insert character to widget
@@ -664,6 +685,7 @@ array set padInfo {
 	owningCLIPBOARD {}
 	precommitStr {}
 	clipText {}
+	keyContainNumber 0
 }
 set padInfo(mode) [lindex $::modeList 0]
 
