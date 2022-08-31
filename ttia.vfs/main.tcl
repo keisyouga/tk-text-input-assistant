@@ -4,13 +4,13 @@ exec wish "$0" -- "$@"
 
 package require Tk
 
-# add auto_path to lib subdir
+# add directory lib to auto_path
 set scriptDir [file dirname [file normalize [info script]]]
 lappend ::auto_path [file join $scriptDir lib]
 
-# assumes config file in in directory that parent of main.tcl
+# config file is located in parent directory of main.tcl
 set configDir [file dirname $scriptDir]
-# config file name
+# config file path
 set configFile [file join $::configDir "config.tcl"]
 # change working directory to configdir
 cd $configDir
@@ -69,7 +69,7 @@ namespace eval ::mywidget {
 			}
 		}
 
-		# if no -textvariable, set text manually
+		# if -textvariable is not specified, set text here
 		if {$v eq ""} {
 			$w configure -text $s
 		}
@@ -94,6 +94,7 @@ namespace eval ::mywidget {
 }
 namespace import mywidget::multiLineEntry
 
+# for give unique name, count window creation
 proc getWinNum {} {
 	incr ::winCount
 	return $::winCount
@@ -547,7 +548,7 @@ proc keyBackSpace {} {
 }
 
 # workarounds
-# some window managers locks keyboard after withdraw or destroy window, so hide it
+#   some window managers locks keyboard after withdraw or destroy window, so hide it
 proc hide {w} {
 	#wm withdraw $w
 	#destroy $w
