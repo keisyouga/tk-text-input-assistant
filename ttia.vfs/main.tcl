@@ -348,9 +348,21 @@ proc moveCandCursorB {w} {
 	moveCandCursor $w -$::candsBox(maxItem)
 }
 
+proc moveCandCursorE {w} {
+	set ::candsBox(pos) [expr [llength $::padInfo(cands)] - 1]
+	moveCandCursor $w 0
+}
+
+proc moveCandCursorA {w} {
+	set ::candsBox(pos) 0
+	moveCandCursor $w 0
+}
+
+# move the cursor in the cands $num item
 proc moveCandCursor {w num} {
 	# puts "moveCandCursor: $w $num"
 
+	# get number of cands
 	set len [llength $::padInfo(cands)]
 	if {$len <= 0} {
 		return
@@ -506,6 +518,10 @@ proc init {} {
 	bind TtiaPadInput <Control-b> "moveCandCursorB %W ; break"
 	bind TtiaPadInput <Key-Next> "moveCandCursorF %W ; break"
 	bind TtiaPadInput <Control-f> "moveCandCursorF %W ; break"
+	bind TtiaPadInput <Key-End> "moveCandCursorE %W ; break"
+	bind TtiaPadInput <Control-e> "moveCandCursorE %W ; break"
+	bind TtiaPadInput <Key-Home> "moveCandCursorA %W ; break"
+	bind TtiaPadInput <Control-a> "moveCandCursorA %W ; break"
 	bind TtiaPadInput <FocusIn> {%W configure -bg yellow}
 	bind TtiaPadInput <FocusOut> {%W configure -bg white}
 
