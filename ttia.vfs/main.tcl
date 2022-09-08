@@ -282,7 +282,7 @@ proc katakanaMode {w} {
 proc cangjieMode {w} {
 	global padInfo
 	set padInfo(mapFile) {}
-	set padInfo(dicFile) "dic/cj-jis.dic"
+	set padInfo(dicFile) "dic/cangjie35-jis.dic"
 	set padInfo(mode) cangjieMode
 }
 
