@@ -4,7 +4,7 @@
 set ::activateKey "Alt-j"
 
 # hide window key
-bind all <Alt-J> {after 50 {hide [winfo toplevel %W]}}
+bind all <Alt-Key-k> {after 50 {hide [winfo toplevel %W]}}
 
 bind all <Alt-O> {}
 bind all <Key-Escape> "cancel"
